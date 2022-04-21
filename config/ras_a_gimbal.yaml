@@ -1,0 +1,21 @@
+Global:
+  system_id: 1
+  # component of the gimbal manager.
+  component_id: 1
+
+Telemetry:
+  sim_factor: 1
+  HaveHeartbeat:
+    skip: false
+    minimal_rate: 1
+  HaveGimbalDeviceAttitudeStatus:
+    skip: false
+    minimal_rate: 5
+
+Gimbal:
+  RequestGimbalManagerInformation:
+    skip: false
+  SetGimbalROILocation:
+    skip: false
+  SetGimbalROINone:
+    skip: false

@@ -17,8 +17,8 @@ protected:
 
     const std::shared_ptr<mavsdk::Ftp> ftp;
     const YAML::Node config;
-    const size_t file_size;
-    const std::string target_path;
+    size_t file_size;
+    std::string target_path;
     std::filesystem::path _temp_dir;
     std::filesystem::path _out_file;
     std::filesystem::path _out_file_corrupted;
@@ -28,12 +28,14 @@ protected:
 
     FTPSDK() :
           ftp(Environment::getInstance()->getFtpPlugin()),
-          config(Environment::getInstance()->getConfig({"FTPSDK"})),
-          file_size(config["file_size"].as<size_t>()),
-          target_path(config["target_path"].as<std::string>())
+          config(Environment::getInstance()->getConfig({"FTPSDK"}))
     {
-        initRandomData();
-        writeTempFiles();
+        if (!!config) {
+            file_size = config["file_size"].as<size_t>();
+            target_path = config["target_path"].as<std::string>();
+            initRandomData();
+            writeTempFiles();
+        }
     }
 
     ~FTPSDK() override {

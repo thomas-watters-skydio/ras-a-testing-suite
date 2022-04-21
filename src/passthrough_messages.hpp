@@ -66,3 +66,7 @@ USE_MESSAGE(autopilot_version, AUTOPILOT_VERSION)
 USE_MESSAGE(poi_report, POI_REPORT)
 USE_MESSAGE(flight_information, FLIGHT_INFORMATION)
 USE_MESSAGE(message_interval, MESSAGE_INTERVAL)
+USE_MESSAGE(gimbal_device_attitude_status, GIMBAL_DEVICE_ATTITUDE_STATUS)
+USE_MESSAGE(gimbal_manager_information, GIMBAL_MANAGER_INFORMATION)
+USE_MESSAGE(gimbal_device_information, GIMBAL_DEVICE_INFORMATION)
+

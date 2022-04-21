@@ -27,13 +27,13 @@ protected:
     }
 
     template<int MSG>
-    double measureRate(int n_samples) {
+    double measureRate(int system_id, int component_id, int n_samples) {
         assert(n_samples > 1);
-        link->flush<MSG>(target);
+        link->flush<MSG>(system_id, component_id);
         uint64_t last_received = 0;
         uint64_t total_time = 0;
         for (int i=0; i<n_samples; i++) {
-            link->template receive<MSG>(target, 5000);
+            link->template receive<MSG>(system_id, component_id, 5000);
             uint64_t now = micros();
             if (last_received != 0) {
                 total_time += (now - last_received);
@@ -44,6 +44,11 @@ protected:
             return 0.;
         }
         return 1e6 * static_cast<double>(n_samples -1) / static_cast<double>(total_time);
+    }
+
+    template<int MSG>
+    double measureRate(int n_samples) {
+        return measureRate<MSG>(target.system_id, target.component_id, n_samples);
     }
 
     double scaledRate(double rate) {
@@ -204,3 +209,12 @@ TEST_F(Telemetry, HaveVFRHUD) {
    EXPECT_GT(scaledRate(freq), conf["minimal_rate"].as<double>());
 }
 
+TEST_F(Telemetry, HaveGimbalDeviceAttitudeStatus) {
+    auto conf = Environment::getInstance()->getConfig({"Telemetry", "HaveGimbalDeviceAttitudeStatus"});
+    if (!conf || conf["skip"].as<bool>(false)) {
+        GTEST_SKIP();
+    }
+    double freq = measureRate<GIMBAL_DEVICE_ATTITUDE_STATUS>(target.system_id, 154, 3);
+    printf("GIMBAL_DEVICE_ATTITUDE_STATUS interval %.2f Hz\n", freq);
+    EXPECT_GT(scaledRate(freq), conf["minimal_rate"].as<double>());
+}
