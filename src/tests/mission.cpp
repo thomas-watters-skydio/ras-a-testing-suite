@@ -203,8 +203,8 @@ TEST_F(Mission, UploadCircularFence) {
     }
     EXPECT_TRUE(hasCapability(MAV_PROTOCOL_CAPABILITY_MISSION_FENCE)) << "MISSION_FENCE capability not reported";
 
-    double latitude = config["Mission"]["home_lat"].as<double>();
-    double longitude = config["Mission"]["home_lon"].as<double>();
+    double latitude = config["home_lat"].as<double>();
+    double longitude = config["home_lon"].as<double>();
 
     link->send<MISSION_COUNT>(1, 1, 2, MAV_MISSION_TYPE_FENCE);
     auto req = link->receive<MISSION_REQUEST_INT>(1, 1);
