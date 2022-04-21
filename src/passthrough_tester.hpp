@@ -11,6 +11,11 @@
 
 namespace RASATestingSuite {
 
+struct TestTargetAddress {
+    int system_id;
+    int component_id;
+};
+
 class TimeoutError : public std::runtime_error {
 public:
     TimeoutError(const std::string &msg) : std::runtime_error(msg) {}
@@ -52,11 +57,18 @@ public:
     }
 
     template<int MSG, typename... Args>
+    void send(const TestTargetAddress& target, Args... args) {
+        send<MSG>(target.system_id, target.component_id, args...);
+    }
+
+    template<int MSG, typename... Args>
     void send(Args... args) {
         mavlink_message_t msg;
         msg_helper<MSG>::pack(_passthrough->get_our_sysid(), _passthrough->get_our_compid(), &msg, args...);
         _passthrough->send_message(msg);
     }
+
+
 
     template<int MSG>
     typename msg_helper<MSG>::decode_type receive(uint8_t src_sysid, uint8_t src_compid, uint32_t timeout_ms) {
@@ -93,6 +105,18 @@ public:
         return receive<MSG>(src_sysid, src_compid, 100);
     }
 
+    template<int MSG>
+    typename msg_helper<MSG>::decode_type receive(const TestTargetAddress& target, uint32_t timeout_ms) {
+        return receive<MSG>(target.system_id, target.component_id, timeout_ms);
+    }
+
+    template<int MSG>
+    typename msg_helper<MSG>::decode_type receive(const TestTargetAddress& target) {
+        return receive<MSG>(target.system_id, target.component_id);
+    }
+
+
+
     /**
      * Checks at most observe_n messages of the given type from the given system and component.
      * As soon as the condition turns true, returns true, otherwise false
@@ -114,11 +138,22 @@ public:
     }
 
     template<int MSG>
+    bool expectCondition(const TestTargetAddress& target, int observe_n, int inidividual_timeout,
+                         const std::function<bool(const typename msg_helper<MSG>::decode_type&)> &condition) {
+        return expectCondition<MSG>(target.system_id, target.component_id, observe_n, inidividual_timeout, condition);
+    }
+
+    template<int MSG>
     void flush(uint8_t src_sysid, uint8_t src_compid) {
         uint64_t hash = recMessageHash(msg_helper<MSG>::ID, src_sysid, src_compid);
         std::scoped_lock lock{_map_mutex};
         (_promise_map[hash]).clear();
         (_message_queue_map[hash]).clear();
+    }
+
+    template<int MSG>
+    void flush(const TestTargetAddress& target) {
+        flush<MSG>(target.system_id, target.component_id);
     }
 
     void flushAll() {

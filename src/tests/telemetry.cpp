@@ -15,23 +15,25 @@ class Telemetry : public ::testing::Test {
 protected:
     const std::shared_ptr<PassthroughTester> link;
     YAML::Node config;
+    TestTargetAddress target;
 
     static constexpr double RATE_MARGIN = 0.2;
 
     Telemetry() :
           link(Environment::getInstance()->getPassthroughTester()),
-            config(Environment::getInstance()->getConfig({"Telemetry"})){
+            config(Environment::getInstance()->getConfig({"Telemetry"})),
+            target(Environment::getInstance()->getTargetAddress()) {
         link->flushAll();
     }
 
     template<int MSG>
     double measureRate(int n_samples) {
         assert(n_samples > 1);
-        link->flush<MSG>(1, 1);
+        link->flush<MSG>(target);
         uint64_t last_received = 0;
         uint64_t total_time = 0;
         for (int i=0; i<n_samples; i++) {
-            link->template receive<MSG>(1, 1, 5000);
+            link->template receive<MSG>(target, 5000);
             uint64_t now = micros();
             if (last_received != 0) {
                 total_time += (now - last_received);

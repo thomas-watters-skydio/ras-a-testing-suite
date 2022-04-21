@@ -5,23 +5,26 @@ using namespace RASATestingSuite;
 class Command : public ::testing::Test {
 protected:
     const std::shared_ptr<PassthroughTester> link;
+    const TestTargetAddress target;
+
 
     Command() :
-          link(Environment::getInstance()->getPassthroughTester()) {
+          link(Environment::getInstance()->getPassthroughTester()),
+          target(Environment::getInstance()->getTargetAddress()) {
         link->flushAll();
     }
 
     template <int MSG>
     void requestMessageCommand() {
         // make sure to flush all existing ALTITUDE messages
-        link->flush<MSG>(1, 1);
-        link->send<COMMAND_LONG>(1, 1,
+        link->flush<MSG>(target);
+        link->send<COMMAND_LONG>(target,
                                  MAV_CMD_REQUEST_MESSAGE, 0,
                                  static_cast<float>(msg_helper<MSG>::ID), NAN, NAN, NAN, NAN, NAN, NAN);
-        auto ack = link->receive<COMMAND_ACK>(1, 1);
+        auto ack = link->receive<COMMAND_ACK>(target);
         EXPECT_EQ(ack.result, MAV_RESULT_ACCEPTED);
         EXPECT_EQ(ack.command, MAV_CMD_REQUEST_MESSAGE);
-        link->receive<MSG>(1, 1, 1000);
+        link->receive<MSG>(target, 1000);
     }
 };
 
@@ -40,16 +43,16 @@ TEST_F(Command, RequestProtocolVersion) {
     }
     // make sure there is no PROTOCOL_VERSION being published
     try {
-        link->receive<PROTOCOL_VERSION>(1, 1);
+        link->receive<PROTOCOL_VERSION>(target);
         FAIL() << "PROTOCOL_VERSION published before requesting. Can not do test";
     } catch(...) {}
-    link->send<COMMAND_LONG>(1, 1,
+    link->send<COMMAND_LONG>(target,
                              MAV_CMD_REQUEST_PROTOCOL_VERSION, 0,
                              1.f, NAN, NAN, NAN, NAN, NAN, NAN);
-    auto ack = link->receive<COMMAND_ACK>(1, 1);
+    auto ack = link->receive<COMMAND_ACK>(target);
     EXPECT_EQ(ack.result, MAV_RESULT_ACCEPTED);
     EXPECT_EQ(ack.command, MAV_CMD_REQUEST_PROTOCOL_VERSION);
-    auto version = link->receive<PROTOCOL_VERSION>(1, 1, 1000);
+    auto version = link->receive<PROTOCOL_VERSION>(target, 1000);
     EXPECT_GE(version.version, 200);
 }
 
@@ -60,16 +63,16 @@ TEST_F(Command, RequestAutopilotCapabilities) {
     }
     // make sure there is no PROTOCOL_VERSION being published
     try {
-        link->receive<AUTOPILOT_VERSION>(1, 1);
+        link->receive<AUTOPILOT_VERSION>(target);
         FAIL() << "AUTOPILOT_VERSION published before requesting. Can not do test";
     } catch(...) {}
-    link->send<COMMAND_LONG>(1, 1,
+    link->send<COMMAND_LONG>(target,
                              MAV_CMD_REQUEST_AUTOPILOT_CAPABILITIES, 0,
                              1.f, NAN, NAN, NAN, NAN, NAN, NAN);
-    auto ack = link->receive<COMMAND_ACK>(1, 1);
+    auto ack = link->receive<COMMAND_ACK>(target);
     EXPECT_EQ(ack.result, MAV_RESULT_ACCEPTED);
     EXPECT_EQ(ack.command, MAV_CMD_REQUEST_AUTOPILOT_CAPABILITIES);
-    link->receive<AUTOPILOT_VERSION>(1, 1, 1000);
+    link->receive<AUTOPILOT_VERSION>(target, 1000);
 }
 
 TEST_F(Command, RequestAltitude) {
@@ -109,12 +112,12 @@ TEST_F(Command, SetMessageInterval) {
     if (!conf || conf["skip"].as<bool>(false)) {
         GTEST_SKIP();
     }
-    link->flush<MESSAGE_INTERVAL>(1, 1);
+    link->flush<MESSAGE_INTERVAL>(target);
 
-    link->send<COMMAND_LONG>(1, 1,
+    link->send<COMMAND_LONG>(target,
                              MAV_CMD_SET_MESSAGE_INTERVAL, 0,
                              msg_helper<ATTITUDE>::ID, 200000.F, 0.f, NAN, NAN, NAN, NAN);
-    auto ack = link->receive<COMMAND_ACK>(1, 1);
+    auto ack = link->receive<COMMAND_ACK>(target);
     EXPECT_EQ(ack.result, MAV_RESULT_ACCEPTED);
     EXPECT_EQ(ack.command, MAV_CMD_SET_MESSAGE_INTERVAL);
 }

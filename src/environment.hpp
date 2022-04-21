@@ -48,6 +48,7 @@ private:
     std::shared_ptr<PassthroughTester> _tester;
 
     mavsdk::System::AutopilotVersion _autopilotVersionData;
+    TestTargetAddress _test_target;
 
     static std::shared_ptr<mavsdk::System> getSystem(mavsdk::Mavsdk& mavsdk)
     {
@@ -82,6 +83,10 @@ private:
 
     Environment(const std::string &connection_url, const std::string &yaml_path) : 
     _connection_url(connection_url), _config(YAML::LoadFile(yaml_path)) {
+        _test_target = {
+            _config["Global"]["system_id"].as<int>(), 
+            _config["Global"]["component_id"].as<int>()
+        };
     }
 
 public:
@@ -156,6 +161,10 @@ public:
 
     const mavsdk::System::AutopilotVersion& getAutopilotVersion() const {
         return _autopilotVersionData;
+    }
+
+    const TestTargetAddress& getTargetAddress() const {
+        return _test_target;
     }
 
     void TearDown() override {

@@ -1,3 +1,7 @@
+Global:
+  system_id: 1
+  component_id: 1
+
 Arm:
   ArmDisarm:
     skip: false

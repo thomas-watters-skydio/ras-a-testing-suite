@@ -14,9 +14,11 @@ inline uint64_t micros() {
 class Ping : public ::testing::Test {
 protected:
     const std::shared_ptr<PassthroughTester> link;
+    const TestTargetAddress target;
 
     Ping() :
-          link(Environment::getInstance()->getPassthroughTester()) {
+          link(Environment::getInstance()->getPassthroughTester()),
+          target(Environment::getInstance()->getTargetAddress()) {
         link->flushAll();
     }
 };
@@ -28,9 +30,9 @@ TEST_F(Ping, PingPong) {
     }
     // broadcast systemid, componentid
     link->send<PING>(micros(), 0, 0, 0);
-    auto res = link->receive<PING>(1, 1);
+    auto res = link->receive<PING>(target);
     EXPECT_EQ(res.seq, 0);
     link->send<PING>(micros(), 1, 0, 0);
-    res = link->receive<PING>(1, 1);
+    res = link->receive<PING>(target);
     EXPECT_EQ(res.seq, 1);
 }
