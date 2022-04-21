@@ -9,7 +9,7 @@
 #include <utility>
 #include "passthrough_messages.hpp"
 
-namespace MavlinkTestingSuite {
+namespace RASATestingSuite {
 
 class TimeoutError : public std::runtime_error {
 public:

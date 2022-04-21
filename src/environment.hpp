@@ -11,7 +11,7 @@
 #include <future>
 #include "passthrough_tester.hpp"
 
-namespace MavlinkTestingSuite {
+namespace RASATestingSuite {
 
 template<typename A, typename B>
 A _packUnpack(B b) {

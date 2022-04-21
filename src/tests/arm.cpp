@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 #include "../environment.hpp"
-using namespace MavlinkTestingSuite;
+using namespace RASATestingSuite;
 
 class Arm : public ::testing::Test {
 protected:

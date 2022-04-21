@@ -2,7 +2,7 @@
 #include "../environment.hpp"
 #include <sys/time.h>
 
-using namespace MavlinkTestingSuite;
+using namespace RASATestingSuite;
 
 // Get current timestamp in microseconds
 inline uint64_t micros() {

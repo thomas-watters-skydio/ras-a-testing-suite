@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 2.8.12)
 
-project(mavlink-testing-suite C CXX)
+project(ras-a-testing-suite C CXX)
 
 # required for clang-tidy
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
@@ -51,11 +51,11 @@ set(TEST_SOURCES
         src/tests/telemetry.cpp src/tests/command.cpp src/tests/arm.cpp src/tests/ping.cpp src/tests/ftp_sdk.cpp)
 
 enable_testing()
-add_executable(mavlink_testing_suite
+add_executable(ras_a_testing_suite
     src/main.cpp
     ${TEST_SOURCES}
 )
-add_dependencies(mavlink_testing_suite
+add_dependencies(ras_a_testing_suite
     ${dependencies}
 )
 
@@ -69,7 +69,7 @@ else()
     set (YAML_LIB yaml-cpp)
 endif()
 
-target_link_libraries(mavlink_testing_suite
+target_link_libraries(ras_a_testing_suite
     mavsdk
     # mavsdk_action
     # mavsdk_mission
@@ -81,7 +81,7 @@ target_link_libraries(mavlink_testing_suite
 )
 
 include(GoogleTest)
-gtest_add_tests(mavlink_testing_suite SOURCES 
+gtest_add_tests(ras_a_testing_suite SOURCES 
     ${TEST_SOURCES}
 )
 

@@ -4,7 +4,7 @@
 #include <memory>
 #include <vector>
 
-using namespace MavlinkTestingSuite;
+using namespace RASATestingSuite;
 
 class MissionSDK : public ::testing::Test {
 protected:

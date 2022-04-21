@@ -7,7 +7,7 @@
 #include <filesystem>
 #include <fstream>
 
-using namespace MavlinkTestingSuite;
+using namespace RASATestingSuite;
 
 class FTPSDK : public ::testing::Test {
 protected:

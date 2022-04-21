@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 #include <sys/time.h>
 #include "../environment.hpp"
-using namespace MavlinkTestingSuite;
+using namespace RASATestingSuite;
 
 // Get current timestamp in microseconds
 inline uint64_t micros() {

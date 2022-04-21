@@ -2,7 +2,7 @@
 #include "../environment.hpp"
 #include "../passthrough_messages.hpp"
 
-using namespace MavlinkTestingSuite;
+using namespace RASATestingSuite;
 
 class Params : public ::testing::Test {
 protected:

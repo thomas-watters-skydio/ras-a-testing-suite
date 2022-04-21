@@ -2,7 +2,7 @@
 #include "../environment.hpp"
 #include "../passthrough_messages.hpp"
 
-using namespace MavlinkTestingSuite;
+using namespace RASATestingSuite;
 
 struct int_coord_t {
     int32_t latitude;
