@@ -24,6 +24,8 @@ For a udp link, the URL would be `udp://<IP>:<PORT>`, e.g. `udp://0.0.0.0:15667`
 3. The test suite contains configurations for different components. To run the tests for the set of minimally required autopilot functionalities, run 
 `./ras_a_testing_suite <connection url> ../config/ras_a_minimal_autopilot.yaml` 
 
+4. To store the test-results as a file, you can add the option `--gtest_output=xml`. This will create an XML that you can share with the test results.
+
 #### Changing settings
 
 The config file may need some modifications to your vehicle. For example, the tests for the integer and float params require you to specify an existing param on your vehicle to test against. Also, for the mission protocol, a home location from which the test missions will be planned can be set.
