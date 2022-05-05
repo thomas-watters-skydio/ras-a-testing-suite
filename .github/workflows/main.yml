@@ -3,32 +3,20 @@ name: Build
 on:
   push:
     branches:
-    - 'main'
+    - 'master'
   pull_request:
     branches:
     - '*'
 
 jobs:
-  ubuntu-1804:
-    name: Ubuntu-18.04
-    runs-on: ubuntu-18.04
+  ubuntu-2004:
+    name: Ubuntu-20.04
+    runs-on: ubuntu-20.04
     steps:
     - uses: actions/checkout@v2
     - name: Install dependencies
-      run: sudo apt-get update && sudo apt-get install -y build-essential cmake clang-format
+      run: sudo apt-get update && sudo apt-get install -y build-essential cmake
     - name: Configure
-      run: cmake -j 2 -Bbuild -H.
+      run: cmake -Bbuild .
     - name: Build
       run: cmake --build build -j 2
-    - name: Run clang-format
-      run: cmake --build build --target format
-
-  windows:
-    name: Windows
-    runs-on: windows-latest
-    steps:
-      - uses: actions/checkout@v2
-      - name: Configure
-        run: cmake -G "Visual Studio 16 2019" -j 2 -Bbuild -S.
-      - name: Build
-        run: cmake --build build -j 2 --config Debug
