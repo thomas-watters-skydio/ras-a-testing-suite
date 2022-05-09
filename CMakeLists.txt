@@ -44,11 +44,14 @@ FetchContent_Declare(
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(googletest)
 
+
+find_package(CURL REQUIRED)
+
 set(TEST_SOURCES
     src/tests/param.cpp
     src/tests/mission_sdk.cpp
     src/tests/mission.cpp
-        src/tests/telemetry.cpp src/tests/command.cpp src/tests/arm.cpp src/tests/ping.cpp src/tests/ftp_sdk.cpp src/tests/gimbal.cpp)
+        src/tests/telemetry.cpp src/tests/command.cpp src/tests/arm.cpp src/tests/ping.cpp src/tests/ftp_sdk.cpp src/tests/gimbal.cpp src/tests/camera.cpp)
 
 enable_testing()
 add_executable(ras_a_testing_suite
@@ -58,6 +61,8 @@ add_executable(ras_a_testing_suite
 add_dependencies(ras_a_testing_suite
     ${dependencies}
 )
+
+include_directories(${CURL_INCLUDE_DIR})
 
 if(MSVC)
     if (CMAKE_BUILD_TYPE STREQUAL "Release")
@@ -78,6 +83,7 @@ target_link_libraries(ras_a_testing_suite
     # mavsdk_mavlink_passthrough
     ${YAML_LIB}
     gtest_main
+    ${CURL_LIBRARIES}
 )
 
 include(GoogleTest)

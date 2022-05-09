@@ -1,0 +1,28 @@
+Global:
+  system_id: 1
+  # component of the gimbal manager.
+  component_id: 100
+
+Telemetry:
+  sim_factor: 1
+  HaveHeartbeat:
+    skip: false
+    minimal_rate: 1
+
+Camera:
+  RequestCameraInformation:
+    skip: false
+  RequestCameraSettings:
+    skip: false
+  SetCameraMode:
+    skip: false
+  RequestStorageInformation:
+    skip: false
+  CaptureImage:
+    skip: false
+  CaptureVideo:
+    skip: false
+  RequestVideoStreamInformation:
+    skip: false
+  DownloadCameraDefintionFile:
+    skip: false
