@@ -1,6 +1,6 @@
 Global:
   system_id: 1
-  # component of the gimbal manager.
+  # component of the camera
   component_id: 100
 
 Telemetry:
